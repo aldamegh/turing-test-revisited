@@ -1,0 +1,12 @@
+# Dependency inventory inferred from imports, not a validated version lock.
+torch
+transformers
+arabert
+datasets
+evaluate
+numpy
+scikit-learn
+tensorboard
+tqdm
+jupyterlab
+ipywidgets
