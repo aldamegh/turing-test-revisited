@@ -1,12 +1,12 @@
-# Dependency inventory inferred from imports, not a validated version lock.
+# Historical experiment imports; compatibility is not locked or runtime-validated.
 torch
 transformers
-arabert
 datasets
+arabert
 evaluate
-numpy
 scikit-learn
-tensorboard
+numpy
+pandas
 tqdm
+tensorboard
 jupyterlab
-ipywidgets

@@ -1,54 +1,66 @@
-# The Turing Test Revisited — Arabic NLP
+# The Turing Test Revisited - Arabic NLP
 
 **Machine Learning's Ability to Identify AI-Generated Text**
 
-## دوري في المشروع
+مشروع تخرج جماعي في علوم الحاسب بجامعة الملك سعود. كان دوري تنظيف البيانات العربية التي جمعها الزملاء وتدريب النماذج العربية. يعرض هذا المستودع كود التجارب العربية على المقالات والمراجعات والتغريدات، مع أداة تنظيف من نسخة بحثية لاحقة.
 
-أنا محمد الدامغ. شاركت في هذا المشروع الجماعي للتخرج في علوم الحاسب بجامعة الملك سعود، وكان دوري العمل على الجزء العربي: تنظيف البيانات العربية التي جمعها الزملاء وتدريب النموذج. تولّى أعضاء آخرون جمع البيانات والعمل على الجزء الإنجليزي.
+My contribution was the Arabic-language component: cleaning Arabic data collected by teammates and training Arabic models. This source release covers article, review, and tweet experiments with AraBERT, PyTorch, and Transformers.
 
-يعرض هذا المستودع نسخة منقحة من كود تجربة عربية كتبتها، باستخدام AraBERT وPyTorch وTransformers.
+## Course and original project dates
 
-## My contribution
+- **Course / المادة:** Computer Science Graduation Project, King Saud University. The surviving team report is labeled **CSC 496**.
+- **Original research / التاريخ الأصلي:** **March-May 2024**, supported by the local experiment files and the team report saved in May 2024.
+- **Later cleaning variant:** the extracted cleaning helper comes from a local notebook last saved on **17 December 2025** and is documented separately from the 2024 experiments.
+- **Publication review:** 9 November 2026. GitHub commit dates describe publication, not when the original research was completed.
 
-I am Mohammed AlDamegh. My role in this team graduation project was the Arabic-language component: cleaning Arabic data collected by teammates and training the Arabic model. Other team members collected data and worked on the English-language components.
+The team report lists Nasser AlGasabi, Abdullah AlJabri, Salman AlEisa, Nawaf AlMazyad, and Mohammed AlDamegh. Team context is credited; the repository presents my Arabic work. Other members collected data and worked on other components, including English.
 
-This repository contains one selected Arabic tweet-classification experiment from my research notebooks. It demonstrates text preprocessing, tokenization, a PyTorch training loop, checkpoint saving, inference, and evaluation. It is not the complete research archive or every data-cleaning step used during the project.
+## Source contents
 
-## Contents
+| File | Purpose | Original source version |
+| --- | --- | --- |
+| [arabert-articles.ipynb](notebooks/arabert-articles.ipynb) | Arabic article experiment, including balancing and model training | 11 May 2024 |
+| [arabert-reviews.ipynb](notebooks/arabert-reviews.ipynb) | Arabic review experiment | 12 May 2024 |
+| [arabert-arabic.ipynb](notebooks/arabert-arabic.ipynb) | Arabic tweet experiment; retains the existing public notebook path | 20 May 2024 |
+| [arabic_cleaning.py](preprocessing/arabic_cleaning.py) | Extracted text-cleaning function and a new streaming CSV wrapper | Later variant saved 17 December 2025 |
+| [PUBLICATION.md](PUBLICATION.md) | Provenance, sanitization, validation, and release scope | Publication documentation |
 
-- [`notebooks/arabert-arabic.ipynb`](notebooks/arabert-arabic.ipynb): sanitized historical Arabic experiment; no saved outputs or embedded data.
-- [`requirements.txt`](requirements.txt): dependencies inferred from the notebook imports; not a tested environment lock.
-- [`PUBLICATION.md`](PUBLICATION.md): authorship, publication boundaries, sanitization, and validation.
+These are selected final source variants rather than every duplicate experiment. Data collection, original corpora, trained models, checkpoints, shared reports, and English components are separate from this source release.
 
-## Inspect or run
+## Inspect and run
 
-You can read the notebook directly on GitHub without executing it. To run it, use an isolated Python/Jupyter environment and review dependency compatibility first:
+Read the notebooks on GitHub without executing them. The cleaning helper and its tests use Python's standard library:
+
+```sh
+python -m unittest discover -s tests -v
+python preprocessing/arabic_cleaning.py --input data/input.csv --output artifacts/cleaned.csv
+```
+
+The cleaner expects `text,label` CSV columns and labels `0` or `1`. It removes links/mentions and non-Arabic-block characters, normalizes alef variants, limits repeated characters to two, and collapses whitespace. Arabic-block digits, punctuation, diacritics, and tatweel can remain. It does not implement every normalization mentioned in the historical comments. Review suitability for your own data before reuse.
+
+To inspect training in an isolated environment:
 
 ```sh
 python -m venv .venv
-# Activate the environment using the command for your operating system.
+# Activate the environment for your operating system.
 python -m pip install -r requirements.txt
 python -m jupyterlab
 ```
 
-Open the notebook from `notebooks/` so its relative paths resolve. Supply your own authorized `data/train.csv` and `data/test.csv` files with `text` and numeric `label` columns. The notebook names labels `0 = AI` and `1 = Human`; verify your labels before training. Do not use the original project data unless you have independently established permission.
+Open a notebook from `notebooks/`. Supply authorized `data/train.csv` and `data/test.csv` files containing `text` and numeric `label` columns; the code maps `0 = AI` and `1 = Human`. Select a checkpoint you trained before setting `model_path` in final inference. The `artifacts/model` value is a placeholder. Notebook execution downloads upstream model/tokenizer and evaluation resources.
 
-The training code writes to `artifacts/trained/`; choose a generated checkpoint and update `model_path` before the final inference section. The generic `artifacts/model` path is a placeholder, not an included trained model. The `artifacts/` directory is ignored by Git.
+## Validation and research limitations
 
-Running downloads upstream model/tokenizer assets and evaluation resources. No dataset, shared report, trained weight, checkpoint, log, or original Git history is distributed in this repository.
+All published notebook code cells pass Python syntax parsing. The cleaning function and CSV wrapper pass synthetic regression checks. Training, model download, end-to-end inference, and historical model scores were not rerun. Requirements are inferred from imports and are not a tested environment lock.
 
-## Research limitations
+Historical training and evaluation logic is preserved: random splits lack fixed seeds/explicit stratification, some balancing assumes enough examples in one class, sections use different preprocessing/tokenization lengths, and the final evaluation averages per-batch metrics while restricting labels to predictions in each batch. Those metrics can differ from global evaluation. The article notebook's historical evaluation input originally carried a tweet-oriented filename; the correct evaluation corpus must be verified before reuse.
 
-This is an archival source release. Training and end-to-end inference were not rerun when preparing it, and dependency versions are not locked. No accuracy or F1 result is claimed for this release.
+The first inference example loads an upstream base model. A separately fine-tuned checkpoint is required for task inference. No accuracy or F1 result is asserted by this release, and experimental predictions must not be used as evidence that a person used AI.
 
-The original experiment uses random train/test splitting without a fixed seed or explicit stratification. Its final evaluation helper averages per-batch metrics and restricts labels to those predicted in each batch; those figures are not equivalent to a single global metric calculation and can be misleading. The preprocessing setup and tokenization lengths also differ between sections and require review before reuse. These historical choices remain visible rather than being silently rewritten.
+## Upstream components and scope
 
-The first inference example uses an upstream pretrained model before task training, so its outputs must not be treated as a trained AI-text detector. A prediction from this experimental code is not evidence that a person used AI.
+The experiments reference [AraBERT](https://github.com/aub-mind/arabert), [Transformers](https://github.com/huggingface/transformers), [PyTorch](https://github.com/pytorch/pytorch), and the [AraBERT Twitter checkpoint](https://huggingface.co/aubmindlab/bert-base-arabertv02-twitter). Their respective terms apply; those components are referenced rather than bundled.
 
-## Upstream components and project scope
+Publication covers selected Arabic code and the extracted helper. It grants no additional rights to teammates' datasets, shared reports, or upstream assets. No blanket open-source license is applied. Student identifiers, faculty names, original outputs, embedded data, credentials, and machine-specific paths are excluded.
 
-The notebook imports [AraBERT preprocessing](https://github.com/aub-mind/arabert), [Transformers](https://github.com/huggingface/transformers), and [PyTorch](https://github.com/pytorch/pytorch), and references the upstream [AraBERT Twitter checkpoint](https://huggingface.co/aubmindlab/bert-base-arabertv02-twitter). These upstream components are not authored by me; their respective terms apply. They are referenced, not bundled here.
-
-Publication of my selected code does not grant rights to the shared research report, teammates' data or code, or any third-party datasets and weights. No additional open-source license is granted by this release.
-
-[Portfolio / موقعي](https://maldamegh.sa/)
+[Portfolio](https://maldamegh.sa/)
