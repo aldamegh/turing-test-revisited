@@ -6,6 +6,25 @@
 
 My contribution was the Arabic-language component: cleaning Arabic data collected by teammates and training Arabic models. This source release covers article, review, and tweet experiments with AraBERT, PyTorch, and Transformers.
 
+## Small offline example
+
+Try the later cleaning helper without downloading a model or supplying research data:
+
+```sh
+python examples/cleaning_demo.py
+```
+
+| Synthetic input | Actual cleaned output |
+| --- | --- |
+| `أهلا #مثال @demo https://example.invalid/demo` | `اهلا مثال` |
+| `إبداع في آفاق اللغة العربية` | `ابداع في افاق اللغة العربية` |
+| `جميييييل` | `جمييل` |
+| `مِثال` | `مِثال` |
+
+[Runnable example](examples/cleaning_demo.py) · [Captured plain-text output](examples/output.txt)
+
+This example was added for the portfolio in November 2026. It illustrates preprocessing only: repeated characters are limited to two and Arabic diacritics can remain. It does not execute the 2024 training experiments, classify text, or demonstrate model quality.
+
 ## Course and original project dates
 
 - **Course / المادة:** Computer Science Graduation Project, King Saud University. The surviving team report is labeled **CSC 496**.

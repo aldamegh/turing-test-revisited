@@ -1,0 +1,14 @@
+Synthetic Arabic cleaning examples
+Input:  أهلا #مثال @demo https://example.invalid/demo
+Output: اهلا مثال
+
+Input:  إبداع في آفاق اللغة العربية
+Output: ابداع في افاق اللغة العربية
+
+Input:  جميييييل
+Output: جمييل
+
+Input:  مِثال
+Output: مِثال
+
+Cleaning helper only; model training and scores are not shown.
